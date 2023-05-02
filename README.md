@@ -14,7 +14,7 @@ DragonAuthMe插件是一个用于身份验证和登录的插件。它可以帮�
 ## 使用方法
 
 1. 将压缩包下的DragonAuthMe.jar插件并将其放入你的服务器的插件目录中。
-2. 将压缩包目录下/plugins/DragonCore/DragonAuthme.yml的龙核配置放到你服务器的对应位置（一定要下载DragonCore插件）。
+2. 将压缩包目录下/plugins/DragonCore/Gui/DragonAuthme.yml的龙核配置放到你服务器的对应位置（一定要下载DragonCore插件）。
 3. 启动服务器，插件将自动加载。
 4. 玩家加入服务器后，插件将自动打开登录界面。
 5. 在登录界面中，玩家需要输入正确的密码进行登录。如果是首次登录，可以选择注册模式并输入密码进行账户创建。
@@ -27,6 +27,15 @@ DragonAuthMe插件没有额外的命令或权限。
 ## 注意事项
 
 - 确保你的服务器已经安装了AuthMe和DragonCore插件。
-- 如果需要对UI进行替换修改，请修改/plugins/DragonCore/DragonAuthme.yml。
+- 如果需要对UI进行替换修改，请修改/plugins/DragonCore/Gui/DragonAuthme.yml。
 
 有关DragonAuthMe插件的更多信息和帮助，请前往交流群1124109145。
+
+## 插件效果图
+<img src="https://bbs.mc9y.net/attachments/4087/" width="800px" height="600px" alt="效果图1">
+<img src="https://bbs.mc9y.net/attachments/4089/" width="800px" height="600px" alt="效果图2">
+<img src="https://bbs.mc9y.net/attachments/4090/" width="800px" height="600px" alt="效果图3">
+
+
+
+
