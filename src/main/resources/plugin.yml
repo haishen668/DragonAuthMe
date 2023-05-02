@@ -1,0 +1,5 @@
+name: DragonAuthme
+version: '${project.version}'
+main: ltd.dreamcraft.www.DragonAuthMe
+author: haishen668
+depend: [DragonCore,AuthMe]
