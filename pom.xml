@@ -6,7 +6,7 @@
 
     <groupId>ltd.dreamcraft</groupId>
     <artifactId>DragonAuthme</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.21-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>DragonAuthme</name>

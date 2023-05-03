@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,7 +30,6 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
     public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveConfig();
-        authMeApi = AuthMeApi.getInstance();
         // 注册事件监听器
         getServer().getPluginManager().registerEvents(this, this);
         guiName = getConfig().getString("guiName");
@@ -40,7 +40,21 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
         getConsoleSender().sendMessage("§3|____/|_|  \\__,_|\\__, |\\___/|_| |_/_/   \\_\\__,_|\\__|_| |_|_| |_| |_|\\___|");
         getConsoleSender().sendMessage("§3                 |___/                                ");
         getConsoleSender().sendMessage("§b|> §e欢迎使用DragonAuthMe龙核附属登录插件!");
-        getConsoleSender().sendMessage("§b|> §e版本：1.0.0");
+        getConsoleSender().sendMessage("§b|> §e${project.version}");
+        Plugin authMePlugin = getServer().getPluginManager().getPlugin("AuthMe");
+        Plugin dragonCorePlugin = getServer().getPluginManager().getPlugin("DragonCore");
+        if (authMePlugin != null && authMePlugin.isEnabled()) {
+            // AuthMe前置插件都存在并启用，初始化 AuthMe API
+            authMeApi = AuthMeApi.getInstance();
+        } else {
+            getLogger().warning("AuthMe 插件未找到或未启用。DragonAuthMe 将不会启用。");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        if (dragonCorePlugin == null || !dragonCorePlugin.isEnabled()) {
+            getLogger().severe("DragonCore 插件未找到或未启用。DragonAuthMe 将不会启用。");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        getConsoleSender().sendMessage("§b|> §e前置插件已启用,插件将正常运行");
     }
 
     @Override
@@ -143,8 +157,6 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
 
         // 发送打开 GUI 的数据包
         PacketSender.sendOpenGui(player, getConfig().getString("guiName"));
-        getLogger().info(player.getName()+"打开了界面");
-        // 创建一个延时任务，检查玩家是否处于安全状态，如果不是，则重新打开 GUI
         new BukkitRunnable() {
             @Override
             public void run() {
