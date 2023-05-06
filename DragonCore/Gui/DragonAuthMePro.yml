@@ -10,9 +10,12 @@ Functions:
     界面变量.y=(方法.取屏幕高度-方法.取组件值('背景_texture','height'))/2;
     方法.延时(1000);
     方法.执行方法('循环减时');
+    方法.执行方法('验证码倒计时');
     方法.异步执行方法('每秒重新计算绘制起始点和更新变量');
   循环减时: |-
     方法.设置变量值('dragonauthme_tip_time', (方法.取变量('dragonauthme_tip_time') > -1)?方法.取变量('dragonauthme_tip_time')-1:-1);
+  验证码倒计时: |-
+    方法.设置变量值('code_countdown', (方法.取变量('code_countdown') > -1)?方法.取变量('code_countdown')-1:-1);
   登录模式: |-
     方法.设置组件值('登录注册按钮1_texture', 'x', '9999');
     方法.设置组件值('登录注册按钮2_texture', 'text', ' &e&l[ §a§n登陆游戏&e&l ]');
@@ -34,13 +37,19 @@ Functions:
     方法.设置组件值('账号注册_texture', 'visible', 'true');
     方法.设置组件值('登录_texture', 'visible', 'false');
     方法.设置组件值('登录注册按钮1_texture', 'text', '&e&l[ §d§n注册账号&e&l ]');
+    方法.设置组件值('登录注册按钮1_texture', 'y', '界面变量.y+203');
+    方法.设置组件值('离开按钮_texture', 'y', '界面变量.y+228');
     方法.设置组件值('登录注册按钮2_texture', 'x', '9999');
     方法.设置组件值('修改密码_texture', 'x', '9999');
     方法.设置组件值('登录提示_label', 'x', '9999');
     方法.设置组件值('密码框_textbox', 'y', "界面变量.y+122");
     方法.设置组件值('密码框_textbox', 'height', 20);
     方法.设置组件值('重复密码框_textbox', 'x', '界面变量.x+81');
-    界面变量.执行操作 = 'registerWithoutEmail';
+    方法.设置组件值('邮箱输入框_textbox', 'x', '界面变量.x+81');
+    方法.设置组件值('验证码输入框_textbox', 'x', '界面变量.x+81');
+    方法.设置组件值('获取验证码_texture', 'text', '&e&l[ §d§n获取验证码&e&l ]');
+    方法.设置组件值('获取验证码_texture', 'x', '界面变量.x+265');
+    界面变量.执行操作 = 'register';
   修改密码模式: |-
     方法.设置组件值('密码修改_texture', 'visible', 'true');
     方法.设置组件值('登录_texture', 'visible', 'false');
@@ -75,8 +84,9 @@ Functions:
     密码框_textbox.text == "§c请输入密码..." ? return 0 : 0;
     密码框_textbox.text == "§c密码必须为 4-30 位 请重新输入!" ? return 0 : 0;
     密码框_textbox.text == "§c密码错误 请重新输入!" ? return 0 : 0;
-    界面变量.执行操作 == "registerWithoutEmail" && 密码框_textbox.text != 重复密码框_textbox.text ? return 重复密码框_textbox.text = "§c两次输入的密码不一致!" : 0;
+    界面变量.执行操作 == "register" && 密码框_textbox.text != 重复密码框_textbox.text ? return 重复密码框_textbox.text = "§c两次输入的密码不一致!" : 0;
     方法.发包('DragonAuthMe', 界面变量.执行操作, 密码框_textbox.text);
+    界面变量.执行操作 == "register" ? return 方法.发包('DragonAuthMe', 'register', 密码框_textbox.text, 邮箱输入框_textbox.text, 验证码输入框_textbox.text) : return 方法.发包('DragonAuthMe', 'login', 密码框_textbox.text);
   执行修改密码: |-
     密码框_textbox.text == "" ? return 密码框_textbox.text = "§c请输入密码..." : 0;
     密码框_textbox.text == "§c请输入密码..." ? return 0 : 0;
@@ -85,7 +95,7 @@ Functions:
     界面变量.执行操作 == "changePassword" && 密码框_textbox.text = 重复密码框_textbox.text ? return 重复密码框_textbox.text = "§c新密码与旧密码一致!" : 0;
     方法.发包('DragonAuthMe', 界面变量.执行操作, 密码框_textbox.text, 重复密码框_textbox.text);
 
-
+#背景
 刷新页面_label:
   x: "界面变量.x+400"
   y: "界面变量.y+10"
@@ -95,7 +105,6 @@ Functions:
   center: true
   actions: 
      click_left: "方法.打开GUI('DragonAuthMe')"
-#背景
 背景_texture:
   x: "界面变量.x"
   y: "界面变量.y"
@@ -103,6 +112,7 @@ Functions:
   height: "330"
   texture: "http://img.mcxin.cn/images/2023/05/03/1.png"
   alpha: "方法.取界面存活时间/100"
+#登录
 登录_texture:
   x: "界面变量.x+155"
   y: "界面变量.y+60"
@@ -124,8 +134,8 @@ Functions:
   alpha: "方法.取界面存活时间/100"
 #账号注册
 账号注册_texture:
-  x: "界面变量.x+133"
-  y: "界面变量.y+70"
+  x: "界面变量.x+130"
+  y: "界面变量.y+50"
   z: "97"
   width: "150"
   height: "32"
@@ -135,7 +145,7 @@ Functions:
 #输入密码框
 密码框_textbox:
   x: "界面变量.x+81"
-  y: "界面变量.y+120"
+  y: "界面变量.y+115"
   width: "258"
   height: "28"
   length: 128
@@ -145,9 +155,17 @@ Functions:
     click_left: "方法.设置组件值('密码框_textbox','text','')"
 登录提示_label:
   x: "界面变量.x+210"
-  y: "界面变量.y+160"
+  y: "界面变量.y+166"
   texts: "§c如果你是第一次玩本服 说明用户名已被占用 请更换用户名"
   center: true
+忘记密码_label:
+  x: "界面变量.x+315"
+  y: "界面变量.y+147"
+  texts: "§b忘记密码?"
+  scale: 0.9
+  center: true
+  actions: 
+     click_left: "方法.打开GUI('DragonRecoverPsd')"
 #输入密码框
 重复密码框_textbox:
   x: "界面变量.x+9999"
@@ -159,10 +177,30 @@ Functions:
   text: "§c请再次输入密码..."
   actions:
     click_left: "方法.设置组件值('重复密码框_textbox','text','')"
+邮箱输入框_textbox:
+  x: "界面变量.x+9999"
+  y: "界面变量.y+92"
+  width: "258"
+  height: "20"
+  length: 128
+  drawBackground: true
+  text: "§c请输入邮箱..."
+  actions:
+    click_left: "方法.设置组件值('邮箱输入框_textbox','text','')"
+验证码输入框_textbox:
+  x: "界面变量.x+9999"
+  y: "界面变量.y+176"
+  width: "180"
+  height: "20"
+  length: 128
+  drawBackground: true
+  text: "§c请输入验证码..."
+  actions:
+    click_left: "方法.设置组件值('验证码输入框_textbox','text','')"
 #按钮
 登录注册按钮1_texture:
   x: "界面变量.x+127"
-  y: "界面变量.y+180"
+  y: "界面变量.y+168"
   texture: "http://img.mcxin.cn/images/2023/05/03/long1.png"
   textureHovered: "http://img.mcxin.cn/images/2023/05/03/long2.png"
   text: "请稍候..."
@@ -180,6 +218,27 @@ Functions:
   height: "30/1.4"
   actions:
     click_left: "方法.执行方法('执行登录注册');"
+获取验证码_texture:
+  x: "界面变量.x+9999"
+  y: "界面变量.y+173"
+  texture: "http://img.mcxin.cn/images/2023/05/03/short1.png"
+  textureHovered: "http://img.mcxin.cn/images/2023/05/03/short2.png"
+  text: "请稍候..."
+  width: "139/1.9"
+  height: "30/1.5"
+  visible: "方法.取变量('code_countdown') < 0"
+  actions:
+    click_left: |-
+        邮箱输入框_textbox.text == "§c请输入邮箱..." ? return 0 : 0;
+        邮箱输入框_textbox.text == "" ? return 方法.发包('DragonAuthMe', 'sendMessage', '邮箱地址不能为空') : 0;
+        方法.发包('DragonAuthMe', 'getCode', 密码框_textbox.text, 邮箱输入框_textbox.text)";
+稍后重试_label:
+  x: "界面变量.x+250+23"
+  y: "界面变量.y+173+8"
+  z: "97"
+  texts: "方法.合并文本('请',方法.取变量('code_countdown'),'秒后重试')"
+  alpha: "方法.取界面存活时间/1500"
+  visible: "方法.取变量('code_countdown') > 0"
 修改密码_texture:
   x: "界面变量.x+216"
   y: "界面变量.y+180"
