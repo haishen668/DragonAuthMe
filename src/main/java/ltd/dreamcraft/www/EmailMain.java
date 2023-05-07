@@ -3,6 +3,7 @@ package ltd.dreamcraft.www;
 import ltd.dreamcraft.www.Manager.ConfigManager;
 import ltd.dreamcraft.www.tools.JDBCUtil;
 import ltd.dreamcraft.www.tools.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -376,6 +377,11 @@ public class EmailMain {
     public static String getPlayerEmailByPlayer(Player player) {
         String playerName = player.getName();
         return getPlayerEmail(playerName);
+    }
+
+    public static void forcePlayerToRegister(Player player, String password) {
+        String command = "register " + password + " " + password;
+        Bukkit.dispatchCommand(player, command);
     }
 
 

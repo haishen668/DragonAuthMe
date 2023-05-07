@@ -196,13 +196,15 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
             authMeApi.changePassword(player.getName(), newPassword);
             player.sendMessage(Lang.success("密码修改成功"));
             getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 2L);
+            player.closeInventory();
         }
         if ("registerWithoutEmail".equals(action)){
             //邮箱功能关闭则直接注册，跳过验证码的验证
             if (getConfig().getBoolean("Email.enable") == false){
-                player.sendMessage(Lang.success("账号注册成功"));
-                authMeApi.registerPlayer(player.getName(), password);
+//                player.sendMessage(Lang.success("账号注册成功"));
+                EmailMain.forcePlayerToRegister(player.getPlayer(), password);
                 getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 2L);
+                player.closeInventory();
                 return;
             }
         }
@@ -212,9 +214,7 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
             //检查邮箱地址是否合法
             if (pattern.matcher(emailAddress).matches()){
             //将生成的验证码存储在code变量中
-            getConsoleSender().sendMessage("邮箱地址" + emailAddress+"已经被获取，且action=getCode");
             code = GetVerificationCode.get(player,emailAddress);
-            getConsoleSender().sendMessage("获取验证码方法执行，验证码为"+code);
             }else {
                 DragonData.sendMessage(player.getPlayer(),"邮箱地址不合法");
             }
@@ -228,15 +228,17 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
                 return;
             }
             if (code.equals(playerCode)) {
-                DataManager.chat.put(player.getName(), code + "-Bind-" + emailAddress);
+//                DataManager.chat.put(player.getName(), code + "-Bind-" + emailAddress);
                 //绑定邮箱的方法.
                 EmailMain.addEmail(player.getPlayer(),emailAddress);
                 //邮箱绑定之后 再执行下列方法 调用AuthMe的api注册账号
-                authMeApi.registerPlayer(player.getName(), password);
-                player.sendMessage(Lang.success("账号注册成功"));
+                EmailMain.forcePlayerToRegister(player.getPlayer(), password);
+//                player.sendMessage(Lang.success("账号注册成功"));
                 //把倒计时变量设置为0
                 DragonData.sendCodeCountdown(player.getPlayer(),0);
-                getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 60L);
+                getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 2L);
+                player.closeInventory();
+                return;
             }else{
                 DragonData.sendMessage(player.getPlayer(),"验证码错误");
                 return;
