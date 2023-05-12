@@ -5,6 +5,8 @@ import ltd.dreamcraft.www.tools.Lang;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+
+@Deprecated
 public class PlayerRegisterEvent implements Listener {
     @EventHandler
     public void onPlayerRegister(AuthMeAsyncPreRegisterEvent event) {

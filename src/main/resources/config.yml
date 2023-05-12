@@ -31,11 +31,6 @@ Storge:
   MySQLDataBase: "root"
   MySQLTableName: "DragonAuthMe"
 Setting:
-  #是否启用AuthMe的修改密码指令   true/为开启  false/为关闭    (等待更新)
-  AuthMePassword: true
-  #是否启用AuthMe的注册功能 true/为开启  false/为关闭
-  #关闭是为了开启邮箱注册功能的时候避免玩家通过AuthMe插件进行注册(主要是防有些卡的龙之登录的界面都打不开的玩家，直接绕过了)
-  AuthMeRegister: false
   #验证码长度
   CodeLength: 6
   #玩家登录之后强制绑定(等待更新)

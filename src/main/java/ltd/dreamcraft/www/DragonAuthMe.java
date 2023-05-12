@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 import static org.bukkit.Bukkit.getConsoleSender;
 
 public class DragonAuthMe extends JavaPlugin implements Listener {
-
-
     public static DragonAuthMe in() {
         return getPlugin(DragonAuthMe.class);
     }
@@ -244,49 +242,6 @@ public class DragonAuthMe extends JavaPlugin implements Listener {
                 return;
             }
         }
-
-   /*
-        switch (action) {
-            case "login":
-                if (!authMeApi.checkPassword(player.getName(), password)) {
-                    sendRunFunction(player, "密码错误");
-                    return;
-                }
-
-                authMeApi.forceLogin(player);
-                break;
-
-            case "register":
-                //验证getCode中的code是否与玩家发送的数据包中的playerCode一样
-
-                if (code.equals(playerCode)) {
-                    //绑定邮箱的方法.
-                    DataManager.chat.put(player.getName(), code + "-Bind-" + emailAddress);
-                    //邮箱绑定之后 再执行下列方法 调用AuthMe的api注册账号
-                    authMeApi.registerPlayer(player.getName(), password);
-                    getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 2L);
-                    break;
-                }
-            case "changePassword":
-                String oldPassword = data.get(1);
-                String newPassword = data.get(2);
-                if (!authMeApi.checkPassword(player.getName(), oldPassword)) {
-                    sendRunFunction(player, "旧密码错误");
-                    return;
-                }
-                if (newPassword == null || newPassword.length() < 4 || newPassword.length() > 30) {
-                    sendRunFunction(player, "密码位数错误");
-                    return;
-                }
-                authMeApi.changePassword(player.getName(), newPassword);
-                player.sendMessage("§a密码修改成功!");
-                getServer().getScheduler().runTaskLater(this, () -> authMeApi.forceLogin(player), 2L);
-                break;
-            default:
-                player.sendMessage("§c未知操作!");
-                break;
-        }
-*/
         player.closeInventory();
     }
 
