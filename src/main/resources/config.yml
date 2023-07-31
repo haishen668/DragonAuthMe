@@ -1,10 +1,13 @@
 #插件版本
-version: 1.1.1
+version: 1.1.4
+#更新检查
+check-update: true
 #只支持QQ邮箱
 Email:
   #是否开启邮箱功能
   enable: true
   Address:
+    #邮件服务器地址(如果不懂请不要更改)
     IP: "smtp.qq.com"
     #端口
     Port: 465
@@ -15,14 +18,14 @@ Email:
     Account: "123456@qq.com"
     #邮箱授权码(不是QQ密码,如果不知道请查看插件教程)
     Password: "123456"
-  Content:  #发件设置
+  Content: #发件设置
     #发件人邮箱(请与登录账户一致)
     SendEmailAddress: "123456@qq.com"
-    #邮件标题
+    #邮件标题(可以修改为服务器名称)
     SendEmailTitle: "DragonAuthMe验证码"
-    #邮件内容(暂时只支持一行,多行可能在下个版本更新,这里的%Email_Code%是验证码变量)
-    SendEmailText: "你的验证码为: %Email_Code%"
-Storge:
+    #邮件模板的html文件(文件在插件根目录内容可以打开修改)
+    SendEmailFile: "text.html"
+Storage:
   #数据储存方式 "Yaml" “MYSQL” 建议使用Yaml,MYSQL可能有些问题
   Type: "Yaml"
   MySQLIP: "localhost:3306"

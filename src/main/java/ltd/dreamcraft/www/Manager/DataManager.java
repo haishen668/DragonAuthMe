@@ -3,7 +3,6 @@ package ltd.dreamcraft.www.Manager;
 import ltd.dreamcraft.www.DragonAuthMe;
 import ltd.dreamcraft.www.tools.JDBCUtil;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -13,20 +12,33 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 
+import static org.bukkit.Bukkit.getConsoleSender;
+
 public class DataManager {
-    static File file = null;
+
 
     public static HashMap<String, String> chat = new HashMap<>();
 
     public void set() {
         setConfig();
         setPlayerData();
+        setTextFile();
     }
 
     private void setConfig() {
         File file = new File("plugins/DragonAuthMe/config.yml");
-        if (!file.exists())
+        if (!file.exists()) {
             DragonAuthMe.in().saveDefaultConfig();
+            getConsoleSender().sendMessage("§b|> §e生成默认的配置文件config.yml!");
+        }
+    }
+
+    private void setTextFile() {
+        File file = new File("plugins/DragonAuthMe/" + getConfig().getString("Email.Content.SendEmailFile"));
+        if (!file.exists()) {
+            DragonAuthMe.in().saveResource("text.html", false);
+            getConsoleSender().sendMessage("§b|> §e生成默认的邮件模板text.html!");
+        }
     }
 
     public static FileConfiguration getConfig() {
@@ -34,7 +46,7 @@ public class DataManager {
     }
 
     private void setPlayerData() {
-        if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
             (new BukkitRunnable() {
                 public void run() {
                     Connection con = JDBCUtil.getConnection();
@@ -42,7 +54,7 @@ public class DataManager {
                     if (con != null)
                         try {
                             DatabaseMetaData meta = con.getMetaData();
-                            ResultSet resultSet = meta.getTables(null, null, ConfigManager.getMySQLtableName(), new String[] { "TABLE" });
+                            ResultSet resultSet = meta.getTables(null, null, ConfigManager.getMySQLtableName(), new String[]{"TABLE"});
                             boolean b = resultSet.next();
                             Statement statement = con.createStatement();
                             if (!b) {
@@ -53,7 +65,7 @@ public class DataManager {
                             e.printStackTrace();
                         }
                 }
-            }).runTaskAsynchronously((Plugin) DragonAuthMe.in());
+            }).runTaskAsynchronously(DragonAuthMe.in());
         } else {
             File file = new File("plugins/DragonAuthMe/PlayerData");
             if (!file.exists())

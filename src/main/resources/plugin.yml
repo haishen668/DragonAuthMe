@@ -4,5 +4,7 @@ main: ltd.dreamcraft.www.DragonAuthMe
 commands:
   DragonAuthMe:
   DragonAuthMeAdmin:
+    aliases:
+      - "dam"
 author: haishen668
 depend: [DragonCore,AuthMe]

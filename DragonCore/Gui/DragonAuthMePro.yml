@@ -85,7 +85,6 @@ Functions:
     密码框_textbox.text == "§c密码必须为 4-30 位 请重新输入!" ? return 0 : 0;
     密码框_textbox.text == "§c密码错误 请重新输入!" ? return 0 : 0;
     界面变量.执行操作 == "register" && 密码框_textbox.text != 重复密码框_textbox.text ? return 重复密码框_textbox.text = "§c两次输入的密码不一致!" : 0;
-    方法.发包('DragonAuthMe', 界面变量.执行操作, 密码框_textbox.text);
     界面变量.执行操作 == "register" ? return 方法.发包('DragonAuthMe', 'register', 密码框_textbox.text, 邮箱输入框_textbox.text, 验证码输入框_textbox.text) : return 方法.发包('DragonAuthMe', 'login', 密码框_textbox.text);
   执行修改密码: |-
     密码框_textbox.text == "" ? return 密码框_textbox.text = "§c请输入密码..." : 0;

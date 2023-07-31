@@ -3,39 +3,44 @@ package ltd.dreamcraft.www.Manager;
 import ltd.dreamcraft.www.DragonAuthMe;
 import ltd.dreamcraft.www.tools.Lang;
 
+import static org.bukkit.Bukkit.getConsoleSender;
+
 public class ConfigManager {
     public static void reloadConfig() {
         DragonAuthMe.in().reloadConfig();
-        System.out.println(Lang.success("配置文件 config.yml 重载成功..."));
     }
 
     public static void saveConfig() {
         DragonAuthMe.getPlugin(DragonAuthMe.class).saveConfig();
-        System.out.println(Lang.success("配置文件 config.yml 保存成功..."));
+        getConsoleSender().sendMessage(Lang.success("配置文件 config.yml 保存成功..."));
+    }
+
+    public static boolean getCheckUpdate() {
+        return DataManager.getConfig().getBoolean("check-update");
     }
 
     public static String getMySQLURL() {
-        return DataManager.getConfig().getString("Storge.MySQLIP");
+        return DataManager.getConfig().getString("Storage.MySQLIP");
     }
 
     public static String getMySQLuserName() {
-        return DataManager.getConfig().getString("Storge.MySQLUserName");
+        return DataManager.getConfig().getString("Storage.MySQLUserName");
     }
 
     public static String getMySQLpassWord() {
-        return DataManager.getConfig().getString("Storge.MySQLPassWord");
+        return DataManager.getConfig().getString("Storage.MySQLPassWord");
     }
 
     public static String getMySQLdataBase() {
-        return DataManager.getConfig().getString("Storge.MySQLDataBase");
+        return DataManager.getConfig().getString("Storage.MySQLDataBase");
     }
 
     public static String getMySQLtableName() {
-        return DataManager.getConfig().getString("Storge.MySQLTableName");
+        return DataManager.getConfig().getString("Storage.MySQLTableName");
     }
 
-    public static String getStorgeType() {
-        return DataManager.getConfig().getString("Storge.Type");
+    public static String getStorageType() {
+        return DataManager.getConfig().getString("Storage.Type");
     }
 
     public static String getEmailAddressIP() {
@@ -64,6 +69,10 @@ public class ConfigManager {
 
     public static String getContentEmailTitle() {
         return DataManager.getConfig().getString("Email.Content.SendEmailTitle");
+    }
+
+    public static String getHtmlFilePath() {
+        return DragonAuthMe.in().getDataFolder() + "\\" + DataManager.getConfig().getString("Email.Content.SendEmailFile");
     }
 
     public static String getContentEmailText() {

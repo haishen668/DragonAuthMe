@@ -10,7 +10,7 @@ public class AdminSendTest extends SubCommand {
         if (sender.hasPermission("DragonAuthMe.Admin")) {
             if (strings[0].equalsIgnoreCase("SendTest")) {
                 if (strings.length == 2) {
-                    SendEmail.send(strings[1], "这是一封测试邮件...");
+                    SendEmail.send(strings[1], "XXXXXX");
                     sender.sendMessage(Lang.success("发送成功..."));
                 } else {
                     sender.sendMessage(Lang.warn("正确用法: /DragonAuthMeAdmin SendTest <邮箱地址>"));

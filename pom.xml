@@ -6,7 +6,7 @@
 
     <groupId>ltd.dreamcraft</groupId>
     <artifactId>DragonAuthMe</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.4</version>
     <packaging>jar</packaging>
 
     <name>DragonAuthMe</name>
@@ -69,6 +69,16 @@
             <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version> <!-- 请使用与其他Jackson模块相同的版本号 -->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version> <!-- 请使用与其他Jackson模块相同的版本号 -->
         </dependency>
     </dependencies>
 </project>

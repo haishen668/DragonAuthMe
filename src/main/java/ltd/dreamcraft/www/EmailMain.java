@@ -23,21 +23,23 @@ import java.util.List;
 import static org.bukkit.Bukkit.getConsoleSender;
 
 public class EmailMain {
- private String emailAddress;
+    private String emailAddress;
+    private String date;
+    private String playerName;
 
-       public EmailMain(String playerName) {
-             this.playerName = playerName;
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   Connection con = JDBCUtil.getConnection();
-                   if (con != null) {
-                         String sql = "select * from " + ConfigManager.getMySQLtableName() + " where PlayerName='" + playerName + "'";
-                         try {
-                               PreparedStatement pst = con.prepareStatement(sql);
-                               ResultSet rs = pst.executeQuery();
-                               while (rs.next()) {
-                                     this.emailAddress = rs.getString("EmailAddress");
-                                     this.date = rs.getString("Date");
-                                   }
+    public EmailMain(String playerName) {
+        this.playerName = playerName;
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+            Connection con = JDBCUtil.getConnection();
+            if (con != null) {
+                String sql = "select * from " + ConfigManager.getMySQLtableName() + " where PlayerName='" + playerName + "'";
+                try {
+                    PreparedStatement pst = con.prepareStatement(sql);
+                    ResultSet rs = pst.executeQuery();
+                    while (rs.next()) {
+                        this.emailAddress = rs.getString("EmailAddress");
+                        this.date = rs.getString("Date");
+                    }
                                JDBCUtil.close(rs, null, con, pst);
                              } catch (Exception e) {
                                e.printStackTrace();
@@ -50,23 +52,21 @@ public class EmailMain {
                    this.date = yamlConfiguration.getString("Date");
                  }
            }
-       private String date; private String playerName;
        public String getEmailAddress() {
              return this.emailAddress;
            }
        public void setEmailAddress(final String emailAddress) {
              this.emailAddress = emailAddress;
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   (new BukkitRunnable()
-                             {
-                           public void run() {
-                                 Connection con = JDBCUtil.getConnection();
-                                 if (con != null) {
-                                       String sql = "UPDATE " + ConfigManager.getMySQLtableName() + " SET EmailAddress='" + emailAddress + "' WHERE PlayerName='" + EmailMain.this.playerName + "'";
-                                       try {
-                                             PreparedStatement pst3 = con.prepareStatement(sql);
-                                             pst3.execute();
-                                             JDBCUtil.close(null, null, con, pst3);
+           if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+               (new BukkitRunnable() {
+                   public void run() {
+                       Connection con = JDBCUtil.getConnection();
+                       if (con != null) {
+                           String sql = "UPDATE " + ConfigManager.getMySQLtableName() + " SET EmailAddress='" + emailAddress + "' WHERE PlayerName='" + EmailMain.this.playerName + "'";
+                           try {
+                               PreparedStatement pst3 = con.prepareStatement(sql);
+                               pst3.execute();
+                               JDBCUtil.close(null, null, con, pst3);
                                            } catch (Exception e) {
                                              e.printStackTrace();
                                            }
@@ -90,17 +90,16 @@ public class EmailMain {
            }
 
        public void setDate(final String date) {
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   (new BukkitRunnable()
-                             {
-                           public void run() {
-                                 Connection con = JDBCUtil.getConnection();
-                                 if (con != null) {
-                                       String sql = "UPDATE " + ConfigManager.getMySQLtableName() + " SET Date='" + date + "' WHERE PlayerName='" + EmailMain.this.playerName + "'";
-                                       try {
-                                             PreparedStatement pst3 = con.prepareStatement(sql);
-                                             pst3.execute();
-                                             JDBCUtil.close(null, null, con, pst3);
+           if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+               (new BukkitRunnable() {
+                   public void run() {
+                       Connection con = JDBCUtil.getConnection();
+                       if (con != null) {
+                           String sql = "UPDATE " + ConfigManager.getMySQLtableName() + " SET Date='" + date + "' WHERE PlayerName='" + EmailMain.this.playerName + "'";
+                           try {
+                               PreparedStatement pst3 = con.prepareStatement(sql);
+                               pst3.execute();
+                               JDBCUtil.close(null, null, con, pst3);
                                            } catch (Exception e) {
                                              e.printStackTrace();
                                            }
@@ -128,17 +127,16 @@ public class EmailMain {
                return;
            }
              final List list = new ArrayList();
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   (new BukkitRunnable()
-                             {
-                           public void run() {
-                                 try {
-                                       Connection con = JDBCUtil.getConnection();
-                                       Statement st = con.createStatement();
-                                       String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
-                                       ResultSet rs1 = st.executeQuery(sql1);
-                                       while (rs1.next()) {
-                                             list.add(rs1.getString(1));
+           if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+               (new BukkitRunnable() {
+                   public void run() {
+                       try {
+                           Connection con = JDBCUtil.getConnection();
+                           Statement st = con.createStatement();
+                           String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
+                           ResultSet rs1 = st.executeQuery(sql1);
+                           while (rs1.next()) {
+                               list.add(rs1.getString(1));
                                            }
                                        if (list.contains(playerName)) {
                                              sender.sendMessage(Lang.error("该玩家文件已经存在,请使用指令编辑..."));
@@ -184,9 +182,8 @@ public class EmailMain {
             return;
         }
         final List list = new ArrayList();
-        if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-            (new BukkitRunnable()
-            {
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+            (new BukkitRunnable() {
                 public void run() {
                     try {
                         Connection con = JDBCUtil.getConnection();
@@ -235,17 +232,16 @@ public class EmailMain {
     }
        public static void deleteEmail(final CommandSender sender, final String playerName) {
              final List list = new ArrayList();
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   (new BukkitRunnable()
-                             {
-                           public void run() {
-                                 try {
-                                       Connection con = JDBCUtil.getConnection();
-                                       Statement st = con.createStatement();
-                                       String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
-                                       ResultSet rs1 = st.executeQuery(sql1);
-                                       while (rs1.next()) {
-                                             list.add(rs1.getString(1));
+           if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+               (new BukkitRunnable() {
+                   public void run() {
+                       try {
+                           Connection con = JDBCUtil.getConnection();
+                           Statement st = con.createStatement();
+                           String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
+                           ResultSet rs1 = st.executeQuery(sql1);
+                           while (rs1.next()) {
+                               list.add(rs1.getString(1));
                                            }
                                        if (list.contains(playerName)) {
                                              String sql2 = "delete from " + ConfigManager.getMySQLtableName() + " where PlayerName='" + playerName + "'";
@@ -278,17 +274,16 @@ public class EmailMain {
                return;
            }
            final List list = new ArrayList();
-             if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
-                   (new BukkitRunnable()
-                             {
-                           public void run() {
-                                 try {
-                                       Connection con = JDBCUtil.getConnection();
-                                       Statement st = con.createStatement();
-                                       String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
-                                       ResultSet rs1 = st.executeQuery(sql1);
-                                       while (rs1.next()) {
-                                             list.add(rs1.getString(1));
+           if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+               (new BukkitRunnable() {
+                   public void run() {
+                       try {
+                           Connection con = JDBCUtil.getConnection();
+                           Statement st = con.createStatement();
+                           String sql1 = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName();
+                           ResultSet rs1 = st.executeQuery(sql1);
+                           while (rs1.next()) {
+                               list.add(rs1.getString(1));
                                            }
                                        if (list.contains(playerName)) {
                                              EmailMain emailMain = new EmailMain(playerName);
@@ -319,8 +314,8 @@ public class EmailMain {
            }
 
     // 检查邮箱是否已被其他玩家绑定
-    private static boolean isEmailUsed(String emailAddress) {
-        if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
+    public static boolean isEmailUsed(String emailAddress) {
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
             try {
                 Connection con = JDBCUtil.getConnection();
                 String sql = "SELECT * FROM " + ConfigManager.getMySQLtableName() + " WHERE EmailAddress='" + emailAddress + "'";
@@ -351,7 +346,7 @@ public class EmailMain {
     public static String getPlayerEmail(String playerName) {
         String emailAddress = null;
 
-        if (ConfigManager.getStorgeType().equalsIgnoreCase("MySQL")) {
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
             try {
                 Connection con = JDBCUtil.getConnection();
                 String sql = "SELECT * FROM " + ConfigManager.getMySQLtableName() + " WHERE PlayerName='" + playerName + "'";
@@ -374,6 +369,56 @@ public class EmailMain {
 
         return emailAddress;
     }
+
+    /**
+     * 获取绑定某个邮箱的玩家名字
+     *
+     * @param emailAddress 玩家邮箱
+     * @return 方法接收一个邮箱地址作为参数，并返回匹配的玩家ID（如果有） 如果没有返回null.
+     */
+    public static String findPlayerIDByEmail(String emailAddress) {
+        String playerID = null;
+
+        // 检查数据库中的数据
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+            try {
+                Connection con = JDBCUtil.getConnection();
+                String sql = "SELECT PlayerName FROM " + ConfigManager.getMySQLtableName() + " WHERE EmailAddress=?";
+                PreparedStatement pst = con.prepareStatement(sql);
+                pst.setString(1, emailAddress);
+                ResultSet rs = pst.executeQuery();
+
+                if (rs.next()) {
+                    playerID = rs.getString("PlayerName");
+                }
+
+                JDBCUtil.close(rs, null, con, pst);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 获取玩家数据文件夹路径
+            File playerDataFolder = new File("plugins/DragonAuthMe/PlayerData/");
+
+            // 遍历玩家数据文件夹下的所有文件
+            File[] playerFiles = playerDataFolder.listFiles();
+            if (playerFiles != null) {
+                for (File file : playerFiles) {
+                    String playerName = file.getName().replace(".yml", "");
+                    String playerEmail = getPlayerEmail(playerName);
+
+                    // 检查文件中的邮箱地址是否匹配
+                    if (playerEmail != null && playerEmail.equalsIgnoreCase(emailAddress)) {
+                        playerID = playerName;
+                        break; // 找到匹配的玩家ID后立即返回
+                    }
+                }
+            }
+        }
+
+        return playerID;
+    }
+
     public static String getPlayerEmailByPlayer(Player player) {
         String playerName = player.getName();
         return getPlayerEmail(playerName);
