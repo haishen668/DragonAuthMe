@@ -54,7 +54,45 @@ public class handleCustomPacketEvent implements Listener {
         List<String> data = event.getData();
         String action = data.get(0);
 
+        //找回密码
+        if ("DragonRecoverPsd".equals(action)) {
+            if (authMeApi.isAuthenticated(player)) {
+                player.closeInventory();
+                return;
+            }
 
+            safeUsers.add(player.getName());
+            sendRunFunction(player, "DragonRecoverPsd", "找回密码模式");
+            return;
+        }
+        //绑定邮箱
+        if ("DragonBindEmail".equals(action)) {
+            String playerCode = data.get(2);
+            if (isEmailUsed(emailAddress)) {
+                DragonData.sendMessage(player, "该邮箱已经被其他玩家绑定...");
+                return;
+            }
+
+            //如果code为空，发送一条信息告诉玩家，请先获取验证码  return
+            if (code == null) {
+                DragonData.sendMessage(player.getPlayer(), "请先获取验证码");
+                return;
+            }
+            if (code.equals(playerCode)) {
+//                DataManager.chat.put(player.getName(), code + "-Bind-" + emailAddress);
+                //绑定邮箱的方法.
+                EmailMain.addEmail(player.getPlayer(), emailAddress);
+                //把倒计时变量设置为0
+                DragonData.sendCodeCountdown(player.getPlayer(), 0);
+                player.closeInventory();
+                //发送一条title告诉玩家邮箱绑定成功
+                player.sendTitle("§a恭喜你" + player.getName(), "§c邮箱绑定成功！", 10, 40, 10);
+                return;
+            } else {
+                DragonData.sendMessage(player.getPlayer(), "验证码错误");
+                return;
+            }
+        }
         if ("prelogin".equals(action)) {
             if (authMeApi.isAuthenticated(player)) {
                 player.closeInventory();
@@ -63,7 +101,6 @@ public class handleCustomPacketEvent implements Listener {
 
             safeUsers.add(player.getName());
             sendRunFunction(player, DragonAuthMeguiName, authMeApi.isRegistered(player.getName()) ? "登录模式" : "注册模式");
-            sendRunFunction(player, "DragonRecoverPsd", "找回密码模式");
             return;
         }
         if ("returnLogin".equals(action)) {
@@ -92,7 +129,7 @@ public class handleCustomPacketEvent implements Listener {
             }
             return;
         }
-
+        //找回密码
         String password = data.get(1);
         if ("RecoverPsd".equals(action)) {
             String playerCode = data.get(2);

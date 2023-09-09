@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -141,16 +142,18 @@ public class EmailMain {
                                        if (list.contains(playerName)) {
                                              sender.sendMessage(Lang.error("该玩家文件已经存在,请使用指令编辑..."));
                                            } else {
-                                             sender.sendMessage(Lang.success("添加成功..."));
-                                             String sql2 = "insert into " + ConfigManager.getMySQLtableName() + "(PlayerName, EmailAddress, Date) values(?,?,?)";
-                                             PreparedStatement ps = con.prepareStatement(sql2);
-                                             Date date = new Date();
-                                             ps.setString(1, playerName);
-                                             ps.setString(2, emailAddress);
-                                             ps.setString(3, date.toString());
-                                             ps.executeUpdate();
-                                             ps.close();
-                                           }
+                                           sender.sendMessage(Lang.success("添加成功..."));
+                                           String sql2 = "insert into " + ConfigManager.getMySQLtableName() + "(PlayerName, EmailAddress, Date) values(?,?,?)";
+                                           PreparedStatement ps = con.prepareStatement(sql2);
+                                           Date date = new Date();
+                                           SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                           String DateFormat = simpleDateFormat.format(date);
+                                           ps.setString(1, playerName);
+                                           ps.setString(2, emailAddress);
+                                           ps.setString(3, DateFormat);
+                                           ps.executeUpdate();
+                                           ps.close();
+                                       }
                                      } catch (Exception e) {
                                        e.printStackTrace();
                                      }
@@ -162,14 +165,16 @@ public class EmailMain {
                          sender.sendMessage(Lang.error("该玩家文件已经存在,请使用指令编辑..."));
                        } else {
                          try {
-                               file.createNewFile();
-                               Date date = new Date();
-                               YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
-                               yamlConfiguration.set("EmailAddress", emailAddress);
-                               yamlConfiguration.set("Date", date.toString());
-                               yamlConfiguration.save(file);
-                               sender.sendMessage(Lang.success("添加成功..."));
-                             } catch (IOException ioException) {
+                             file.createNewFile();
+                             Date date = new Date();
+                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                             String DateFormat = simpleDateFormat.format(date);
+                             YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
+                             yamlConfiguration.set("EmailAddress", emailAddress);
+                             yamlConfiguration.set("Date", DateFormat);
+                             yamlConfiguration.save(file);
+                             sender.sendMessage(Lang.success("添加成功..."));
+                         } catch (IOException ioException) {
                                ioException.printStackTrace();
                              }
                        }
@@ -200,9 +205,11 @@ public class EmailMain {
                             String sql2 = "insert into " + ConfigManager.getMySQLtableName() + "(PlayerName, EmailAddress, Date) values(?,?,?)";
                             PreparedStatement ps = con.prepareStatement(sql2);
                             Date date = new Date();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String DateFormat = simpleDateFormat.format(date);
                             ps.setString(1, playerName);
                             ps.setString(2, emailAddress);
-                            ps.setString(3, date.toString());
+                            ps.setString(3, DateFormat);
                             ps.executeUpdate();
                             ps.close();
                         }
@@ -219,9 +226,11 @@ public class EmailMain {
                 try {
                     file.createNewFile();
                     Date date = new Date();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String DateFormat = simpleDateFormat.format(date);
                     YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
                     yamlConfiguration.set("EmailAddress", emailAddress);
-                    yamlConfiguration.set("Date", date.toString());
+                    yamlConfiguration.set("Date", DateFormat);
                     yamlConfiguration.save(file);
                     getConsoleSender().sendMessage(Lang.success("添加成功..."));
                 } catch (IOException ioException) {
@@ -286,13 +295,15 @@ public class EmailMain {
                                list.add(rs1.getString(1));
                                            }
                                        if (list.contains(playerName)) {
-                                             EmailMain emailMain = new EmailMain(playerName);
-                                             emailMain.setEmailAddress(emailAddress);
-                                             Date date = new Date();
-                                             emailMain.setDate(date.toString());
-                                             sender.sendMessage(Lang.success("修改成功..."));
-                                             JDBCUtil.close(rs1, st, con, null);
-                                           }
+                                           EmailMain emailMain = new EmailMain(playerName);
+                                           emailMain.setEmailAddress(emailAddress);
+                                           Date date = new Date();
+                                           SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                           String DateFormat = simpleDateFormat.format(date);
+                                           emailMain.setDate(DateFormat);
+                                           sender.sendMessage(Lang.success("修改成功..."));
+                                           JDBCUtil.close(rs1, st, con, null);
+                                       }
 
                                      } catch (Exception e) {
                                        sender.sendMessage(Lang.error("该玩家数据不存在..."));
@@ -302,18 +313,25 @@ public class EmailMain {
                  } else {
                    File file = new File("plugins/DragonAuthMe/PlayerData/" + playerName + ".yml");
                    if (file.exists()) {
-                         EmailMain emailMain = new EmailMain(playerName);
-                         emailMain.setEmailAddress(emailAddress);
-                         Date date = new Date();
-                         emailMain.setDate(date.toString());
-                         sender.sendMessage(Lang.success("修改成功..."));
-                       } else {
-                         sender.sendMessage(Lang.error("该玩家数据不存在"));
-                       }
-                 }
+                       EmailMain emailMain = new EmailMain(playerName);
+                       emailMain.setEmailAddress(emailAddress);
+                       Date date = new Date();
+                       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                       String DateFormat = simpleDateFormat.format(date);
+                       emailMain.setDate(DateFormat);
+                       sender.sendMessage(Lang.success("修改成功..."));
+                   } else {
+                       sender.sendMessage(Lang.error("该玩家数据不存在"));
+                   }
            }
+       }
 
-    // 检查邮箱是否已被其他玩家绑定
+    /**
+     * 检查邮箱是否被玩家绑定了
+     *
+     * @param emailAddress 邮箱地址
+     * @return 如果邮箱被玩家绑定了则返回 true，否则返回 false。
+     */
     public static boolean isEmailUsed(String emailAddress) {
         if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
             try {
@@ -342,6 +360,37 @@ public class EmailMain {
 
         return false;
     }
+
+    /**
+     * 检查玩家是否绑定了邮箱
+     *
+     * @param playerName 玩家名字
+     * @return 如果玩家绑定了邮箱则返回 true，否则返回 false。
+     */
+    public static boolean isPlayerBoundToEmail(String playerName) {
+        // 首先检查数据库中的数据
+        if (ConfigManager.getStorageType().equalsIgnoreCase("MySQL")) {
+            try {
+                Connection con = JDBCUtil.getConnection();
+                String sql = "SELECT * FROM " + ConfigManager.getMySQLtableName() + " WHERE PlayerName=?";
+                PreparedStatement pst = con.prepareStatement(sql);
+                pst.setString(1, playerName);
+                ResultSet rs = pst.executeQuery();
+                boolean isBound = rs.next();
+                JDBCUtil.close(rs, null, con, pst);
+                return isBound;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 检查玩家数据文件夹中是否存在对应的玩家数据文件
+            File file = new File("plugins/DragonAuthMe/PlayerData/" + playerName + ".yml");
+            return file.exists();
+        }
+
+        return false;
+    }
+
     //方法接收一个玩家名（String playerName）作为参数，并返回该玩家的邮箱地址。如果找不到该玩家或该玩家未绑定邮箱，返回 null。
     public static String getPlayerEmail(String playerName) {
         String emailAddress = null;

@@ -55,10 +55,10 @@ public class AdminCommand implements TabExecutor {
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length >= 1) {
-            for(SubCommand sub : this.subcommands) {
+            for (SubCommand sub : this.subcommands) {
                 sub.performCommand(commandSender, strings);
             }
-        } else if (commandSender.hasPermission("DragonAuthMe.Admin")) {
+        } else if (commandSender.hasPermission("DragonAuthMe.Help")) {
             this.help(commandSender);
         } else {
             commandSender.sendMessage(Lang.error("你没有权限执行这个指令..."));

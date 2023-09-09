@@ -5,6 +5,7 @@ import ltd.dreamcraft.www.Manager.ConfigManager;
 import ltd.dreamcraft.www.Manager.DataManager;
 import ltd.dreamcraft.www.command.admincommand.AdminCommand;
 import ltd.dreamcraft.www.command.playercommand.PlayerCommand;
+import ltd.dreamcraft.www.event.PlayerLoginEvent;
 import ltd.dreamcraft.www.event.handleCustomPacketEvent;
 import ltd.dreamcraft.www.tools.CheckPluginUpdate;
 import ltd.dreamcraft.www.tools.Metrics;
@@ -24,7 +25,7 @@ public class DragonAuthMe extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 注册事件监听器
+        // 注册事件监听器 监听自定义龙核数据包事件
         getServer().getPluginManager().registerEvents(new handleCustomPacketEvent(), this);
         getConsoleSender().sendMessage("§3 ____                                 _         _   _                           ");
         getConsoleSender().sendMessage("§3|  _ \\ _ __ __ _  __ _  ___  _ __    / \\  _   _| |_| |__  _ _                 ");
@@ -34,10 +35,11 @@ public class DragonAuthMe extends JavaPlugin {
         getConsoleSender().sendMessage("§3                 |___/                                ");
         getConsoleSender().sendMessage("§b|> §e欢迎使用DragonAuthMe龙核附属登录插件!");
         getConsoleSender().sendMessage("§b|> §e当前版本为：" + getDescription().getVersion());
-        //检查更新 如果配置文件设置了true则 检查插件是否需要更新
+        //检查更新 如果配置文件设置了true则 检查插件是否需要更新 且 注册监听玩家登录事件，如果是op就发送更新提示
         if (ConfigManager.getCheckUpdate()) {
             CheckPluginUpdate.checkPluginUpdate("https://pluginapi.dreamcraft.ltd/api/plugins/");
         }
+        getServer().getPluginManager().registerEvents(new PlayerLoginEvent(), this);
         //初始化配置文件
         DataManager d = new DataManager();
         d.set();

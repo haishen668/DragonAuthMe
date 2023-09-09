@@ -7,18 +7,17 @@ import org.bukkit.command.CommandSender;
 
 public class AdminAddEmail extends SubCommand {
     public boolean performCommand(CommandSender sender, String[] strings) {
-        if (sender.hasPermission("DragonAuthMe.Admin")) {
             if (strings[0].equalsIgnoreCase("Add")) {
-                if (strings.length == 3) {
-                    EmailMain.addEmail(sender, strings[1], strings[2]);
+                if (sender.hasPermission("DragonAuthMe.Add") || sender.hasPermission("DragonAuthMe.Admin")) {
+                    if (strings.length == 3) {
+                        EmailMain.addEmail(sender, strings[1], strings[2]);
+                    } else {
+                        sender.sendMessage(Lang.warn("正确用法: /DragonAuthMeAdmin Add <玩家名称> <邮箱地址>"));
+                    }
                 } else {
-                    sender.sendMessage(Lang.warn("正确用法: /DragonAuthMeAdmin Add <玩家名称> <邮箱地址>"));
+                    sender.sendMessage(Lang.error("你没有权限执行这个指令..."));
                 }
             }
-        } else {
-            sender.sendMessage(Lang.error("你没有权限执行这个指令..."));
-        }
-
         return true;
     }
 }

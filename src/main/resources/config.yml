@@ -1,11 +1,13 @@
 #插件版本
-version: 1.1.4
+version: 1.1.5
 #更新检查
 check-update: true
 #只支持QQ邮箱
 Email:
   #是否开启邮箱功能
   enable: true
+  #是否开启强制绑定邮箱功能(玩家登录后如果没有绑定就强制绑定)除非有"DragonAuthMe.ignore"这个权限
+  force-bind: false
   Address:
     #邮件服务器地址(如果不懂请不要更改)
     IP: "smtp.qq.com"
@@ -25,6 +27,13 @@ Email:
     SendEmailTitle: "DragonAuthMe验证码"
     #邮件模板的html文件(文件在插件根目录内容可以打开修改)
     SendEmailFile: "text.html"
+Setting:
+  #验证码长度
+  CodeLength: 6
+  #玩家登录之后强制绑定(玩家登录后如果没有绑定邮箱就强制绑定)除非有"DragonAuthMe.ignore"这个权限
+  ForceBind: false
+  #邮箱正则的正则表达式 (没有特殊需求 请不要修改)
+  Regx: "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$"
 Storage:
   #数据储存方式 "Yaml" “MYSQL” 建议使用Yaml,MYSQL可能有些问题
   Type: "Yaml"
@@ -33,10 +42,3 @@ Storage:
   MySQLPassWord: "123456"
   MySQLDataBase: "root"
   MySQLTableName: "DragonAuthMe"
-Setting:
-  #验证码长度
-  CodeLength: 6
-  #玩家登录之后强制绑定(等待更新)
-  ForceBind: false
-  #邮箱正则的正则表达式 (没有特殊需求 请不要修改)
-  Regx: "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$"

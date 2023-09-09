@@ -16,9 +16,9 @@ public class CheckPluginUpdate {
      * 检查插件是否需要更新，访问API获取插件json数据
      *
      * @param apiUrl API链接
-     * @return 解析json数组检查版本号，进行比较
+     * @return 如果有新版本就返回字符串 “最新版本&下载地址” 没有新版本就返回"NOTREQUIRED" 发生错误返回"ERROR"
      */
-    public static void checkPluginUpdate(String apiUrl) {
+    public static String checkPluginUpdate(String apiUrl) {
         getConsoleSender().sendMessage("§b|> §6正在检查更新....");
         try {
             URL url = new URL(apiUrl);
@@ -52,19 +52,25 @@ public class CheckPluginUpdate {
                             // 告诉控制台插件有了最新版本，需要你的更新
                             getConsoleSender().sendMessage("§b|> §c发现新版本：" + latestVersion);
                             getConsoleSender().sendMessage("§b|> §c新版本下载地址：" + downloadUrl);
+                            return latestVersion + "&" + downloadUrl;
                         } else {
-                            DragonAuthMe.in().getLogger().info("DragonAuthMe插件已经是最新版本，无需更新。");
+                            getConsoleSender().sendMessage("§b|> §aDragonAuthMe§e插件已经是§c最新版本§e无需更新。");
+                            //如果不需要更新就返回字符串
+                            return "NOTREQUIRED";
                         }
 
                         // 只需要检查一个名为"DragonAuthMe"的插件信息，因此退出循环
-                        break;
+                        //break;
                     }
                 }
+                return null;
             } catch (Exception e) {
                 DragonAuthMe.in().getLogger().severe("解析API返回的JSON数据时发生错误：" + e.getMessage());
+                return "ERROR";
             }
         } catch (Exception e) {
             DragonAuthMe.in().getLogger().severe("更新DragonAuthMe插件时发生错误：" + e.getMessage());
+            return "ERROR";
         }
     }
 

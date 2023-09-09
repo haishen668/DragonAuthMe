@@ -19,6 +19,14 @@ public class ConfigManager {
         return DataManager.getConfig().getBoolean("check-update");
     }
 
+    public static boolean getEmailEnable() {
+        return DataManager.getConfig().getBoolean("Email.enable");
+    }
+
+    public static boolean getForceBindEmail() {
+        return DataManager.getConfig().getBoolean("Setting.ForceBind");
+    }
+
     public static String getMySQLURL() {
         return DataManager.getConfig().getString("Storage.MySQLIP");
     }
@@ -75,24 +83,10 @@ public class ConfigManager {
         return DragonAuthMe.in().getDataFolder() + "\\" + DataManager.getConfig().getString("Email.Content.SendEmailFile");
     }
 
-    public static String getContentEmailText() {
-        return DataManager.getConfig().getString("Email.Content.SendEmailText");
-    }
-
     public static int getSettingCodeLength() {
         return DataManager.getConfig().getInt("Setting.CodeLength");
     }
 
-    public static boolean getSettingForceBind() {
-        return DataManager.getConfig().getBoolean("Setting.ForceBind");
-    }
-
-    public static boolean getSettingAuthMePassword() {
-        return DataManager.getConfig().getBoolean("Setting.AuthMePassword");
-    }
-    public static boolean getSettingAuthMeRegister(){
-        return DataManager.getConfig().getBoolean("Setting.AuthMeRegister");
-    }
 
     public static String getSettingRegx() {
         return DataManager.getConfig().getString("Setting.Regx");
