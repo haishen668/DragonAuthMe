@@ -11,7 +11,7 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
 
 ## 使用方法
 
-1. 将压缩包下的DragonAuthMe.jar插件并将其放入你的服务器的插件目录中。
+1. 将压缩包下的DragonAuthMe.jar插件并将其放入你的服务器的插件目录中(别忘记插件前置)。
 2. 将压缩包目录下 /plugins/DragonCore/Gui/ 的龙核配置放到你服务器的对应位置（一定要下载DragonCore插件）。
 3. 启动服务器，插件将自动加载，在插件目录下生成config.yml文件。
 4. 配置config.yml文件，具体配置方法写在了配置文件当中。
