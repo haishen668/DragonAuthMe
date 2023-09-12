@@ -29,11 +29,16 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
 
     #插件版本
     version: 1.1.5
+    #更新检查
+    check-update: true
     #只支持QQ邮箱
     Email:
     #是否开启邮箱功能
     enable: true
+    #是否开启强制绑定邮箱功能(玩家登录后如果没有绑定就强制绑定)除非有"DragonAuthMe.ignore"这个权限
+    force-bind: false
     Address:
+    #邮件服务器地址(如果不懂请不要更改)
     IP: "smtp.qq.com"
     #端口
     Port: 465
@@ -44,13 +49,20 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
     Account: "123456@qq.com"
     #邮箱授权码(不是QQ密码,如果不知道请查看插件教程)
     Password: "123456"
-    Content:  #发件设置
+    Content: #发件设置
     #发件人邮箱(请与登录账户一致)
     SendEmailAddress: "123456@qq.com"
     #邮件标题(可以修改为服务器名称)
     SendEmailTitle: "DragonAuthMe验证码"
     #邮件模板的html文件(文件在插件根目录内容可以打开修改)
     SendEmailFile: "text.html"
+    Setting:
+    #验证码长度
+    CodeLength: 6
+    #玩家登录之后强制绑定(玩家登录后如果没有绑定邮箱就强制绑定)除非有"DragonAuthMe.ignore"这个权限
+    ForceBind: false
+    #邮箱正则的正则表达式 (没有特殊需求 请不要修改)
+    Regx: "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+[        DISCUZ_CODE_0        ]quot;
     Storage:
     #数据储存方式 "Yaml" “MYSQL” 建议使用Yaml,MYSQL可能有些问题
     Type: "Yaml"
@@ -59,13 +71,6 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
     MySQLPassWord: "123456"
     MySQLDataBase: "root"
     MySQLTableName: "DragonAuthMe"
-    Setting:
-    #验证码长度
-    CodeLength: 6
-    #玩家登录之后强制绑定(等待更新)
-    ForceBind: false
-    #邮箱正则的正则表达式 (没有特殊需求 请不要修改)
-    Regx: "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$"
 
 
 
@@ -78,12 +83,14 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
 * /DragonAuthMe View  ---   查看自己邮箱的地址
 
 **权限节点：DragonAuthMe.Admin**
-* /DragonAuthMeAdmin Add <玩家名称> <邮箱地址>  --- 为一个玩家添加邮箱地址 
+
+* /DragonAuthMeAdmin Add <玩家名称> <邮箱地址>  --- 为一个玩家添加邮箱地址
 * /DragonAuthMeAdmin Edit <玩家名称> <邮箱地址>  --- 修改一个玩家的邮箱地址
 * /DragonAuthMeAdmin Delete <玩家名称> <邮箱地址>  --- 删除一个玩家的邮箱地址
 * /DragonAuthMeAdmin View <玩家名称> <邮箱地址>  --- 查看某个玩家的邮箱地址
 * /DragonAuthMeAdmin SendTest <邮箱地址> --- 发送一封测试邮件
-
+* /DragonAuthMeAdmin Find <邮箱地址> --- 通过邮箱地址找到其绑定的玩家
+* /DragonAuthMeAdmin Reload --- 重新加载配置文件
 
 ## 注意事项！！！(必读)
 
