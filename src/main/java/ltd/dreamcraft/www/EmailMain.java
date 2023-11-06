@@ -3,6 +3,7 @@ package ltd.dreamcraft.www;
 import ltd.dreamcraft.www.Manager.ConfigManager;
 import ltd.dreamcraft.www.tools.JDBCUtil;
 import ltd.dreamcraft.www.tools.Lang;
+import ltd.dreamcraft.www.tools.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -74,17 +75,20 @@ public class EmailMain {
                                      }
                                }
                          }).runTaskAsynchronously((Plugin) DragonAuthMe.in());
-                 } else {
-                   File file = new File("plugins/DragonAuthMe/PlayerData/" + this.playerName + ".yml");
-                   YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
-                   yamlConfiguration.set("EmailAddress", emailAddress);
-                   try {
-                         yamlConfiguration.save(file);
-                       } catch (IOException ioException) {
-                         ioException.printStackTrace();
-                       }
-                 }
+           } else {
+               File file = new File("plugins/DragonAuthMe/PlayerData/" + this.playerName + ".yml");
+               YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
+               yamlConfiguration.set("EmailAddress", emailAddress);
+               try {
+                   yamlConfiguration.save(file);
+               } catch (IOException ioException) {
+                   ioException.printStackTrace();
+               }
            }
+           if (ConfigManager.getEmailLoggerEnable()) {
+               Logger.log("玩家" + playerName + "的邮箱被设置为" + emailAddress);
+           }
+       }
 
        public String getDate() {
              return this.date;
@@ -175,11 +179,14 @@ public class EmailMain {
                              yamlConfiguration.save(file);
                              sender.sendMessage(Lang.success("添加成功..."));
                          } catch (IOException ioException) {
-                               ioException.printStackTrace();
-                             }
-                       }
-                 }
+                             ioException.printStackTrace();
+                         }
+                   }
            }
+           if (ConfigManager.getEmailLoggerEnable()) {
+               Logger.log("管理员" + sender.getName() + "给玩家" + playerName + "绑定了邮箱" + emailAddress);
+           }
+       }
     public static void addEmail(final Player player, final String emailAddress) {
         String playerName = player.getName();
            if (isEmailUsed(emailAddress)) {
@@ -238,6 +245,9 @@ public class EmailMain {
                 }
             }
         }
+        if (ConfigManager.getEmailLoggerEnable()) {
+            Logger.log("玩家" + playerName + "绑定了邮箱" + emailAddress);
+        }
     }
        public static void deleteEmail(final CommandSender sender, final String playerName) {
              final List list = new ArrayList();
@@ -266,17 +276,20 @@ public class EmailMain {
                                        e.printStackTrace();
                                      }
                                }
-                         }).runTaskAsynchronously((Plugin) DragonAuthMe.in());
-                 } else {
-                   File file = new File("plugins/DragonAuthMe/PlayerData/" + playerName + ".yml");
-                   if (file.exists()) {
-                         file.delete();
-                         sender.sendMessage(Lang.success("删除成功..."));
-                       } else {
-                         sender.sendMessage(Lang.error("该玩家数据不存在"));
-                       }
-                 }
+               }).runTaskAsynchronously((Plugin) DragonAuthMe.in());
+           } else {
+               File file = new File("plugins/DragonAuthMe/PlayerData/" + playerName + ".yml");
+               if (file.exists()) {
+                   file.delete();
+                   sender.sendMessage(Lang.success("删除成功..."));
+               } else {
+                   sender.sendMessage(Lang.error("该玩家数据不存在"));
+               }
            }
+           if (ConfigManager.getEmailLoggerEnable()) {
+               Logger.log("管理员" + sender.getName() + "删除了玩家" + playerName + "的邮箱");
+           }
+       }
        public static void editEmail(final CommandSender sender, final String playerName, final String emailAddress) {
            if (isEmailUsed(emailAddress)) {
                sender.sendMessage(Lang.error("该新邮箱已经被其他玩家绑定..."));
@@ -323,6 +336,9 @@ public class EmailMain {
                    } else {
                        sender.sendMessage(Lang.error("该玩家数据不存在"));
                    }
+           }
+           if (ConfigManager.getEmailLoggerEnable()) {
+               Logger.log("管理员" + sender.getName() + "将玩家" + playerName + "的邮箱设置为" + emailAddress);
            }
        }
 

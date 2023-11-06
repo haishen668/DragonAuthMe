@@ -14,11 +14,17 @@ public class PlayerLoginEvent implements Listener {
     @EventHandler
     public void afterPlayerLogin(LoginEvent event) {
         //检测玩家是否是op，如果是就发送更新提示
-        if (event.getPlayer().isOp() && ConfigManager.getCheckUpdate()) {
+        if (event.getPlayer().isOp() && ConfigManager.getAdminUpdatePrompts()) {
             String[] data = CheckPluginUpdate.checkPluginUpdate("https://pluginapi.dreamcraft.ltd/api/plugins/").split("&");
             if (data.length > 1) {
                 event.getPlayer().sendMessage(Lang.prefix("&c发现新版本: " + data[0] + "&7(&a可在配置文件中关闭更新检查&7)"));
                 event.getPlayer().sendMessage(Lang.prefix("&c新版本下载地址: " + data[1]));
+                String[] broadcasts = data[2].split("\n");
+                event.getPlayer().sendMessage(Lang.prefix("┏━━━━━━━━━ 更新日志 ━━━━━━━━━"));
+                for (String message : broadcasts) {
+                    event.getPlayer().sendMessage(Lang.prefix("┃ " + message.replaceAll("&", "§")));
+                }
+                event.getPlayer().sendMessage(Lang.prefix("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
             }
         }
         //如果邮箱功能打开且邮箱强制绑定功能也打开那么就绑定邮箱

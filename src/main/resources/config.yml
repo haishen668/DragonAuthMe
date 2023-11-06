@@ -1,13 +1,17 @@
 #插件版本
-version: 1.1.5
+version: 1.2.0
 #更新检查
 check-update: true
-#只支持QQ邮箱
+#是否给管理员发送更新提醒
+admin-update-prompts: true
+#邮箱功能配置 暂时只支持QQ邮箱
 Email:
   #是否开启邮箱功能
   enable: true
   #是否开启强制绑定邮箱功能(玩家登录后如果没有绑定就强制绑定)除非有"DragonAuthMe.ignore"这个权限
   force-bind: false
+  #是否开启邮箱绑定日志
+  logger: true
   Address:
     #邮件服务器地址(如果不懂请不要更改)
     IP: "smtp.qq.com"
@@ -30,6 +34,8 @@ Email:
 Setting:
   #验证码长度
   CodeLength: 6
+  #验证码过期时间(单位为分钟)
+  CodeTime: 5
   #玩家登录之后强制绑定(玩家登录后如果没有绑定邮箱就强制绑定)除非有"DragonAuthMe.ignore"这个权限
   ForceBind: false
   #邮箱正则的正则表达式 (没有特殊需求 请不要修改)

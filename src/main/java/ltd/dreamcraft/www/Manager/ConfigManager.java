@@ -19,8 +19,16 @@ public class ConfigManager {
         return DataManager.getConfig().getBoolean("check-update");
     }
 
+    public static boolean getAdminUpdatePrompts() {
+        return DataManager.getConfig().getBoolean("admin-update-prompts");
+    }
+
     public static boolean getEmailEnable() {
         return DataManager.getConfig().getBoolean("Email.enable");
+    }
+
+    public static boolean getEmailLoggerEnable() {
+        return DataManager.getConfig().getBoolean("Email.logger");
     }
 
     public static boolean getForceBindEmail() {

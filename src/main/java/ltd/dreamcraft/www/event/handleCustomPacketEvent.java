@@ -7,9 +7,10 @@ import ltd.dreamcraft.www.DragonAuthMe;
 import ltd.dreamcraft.www.DragonData;
 import ltd.dreamcraft.www.EmailMain;
 import ltd.dreamcraft.www.Manager.ConfigManager;
-import ltd.dreamcraft.www.Manager.DataManager;
+import ltd.dreamcraft.www.Manager.VerificationData;
 import ltd.dreamcraft.www.tools.GetVerificationCode;
 import ltd.dreamcraft.www.tools.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,17 +19,19 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static ltd.dreamcraft.www.DragonAuthMe.DragonAuthMeguiName;
 import static ltd.dreamcraft.www.DragonAuthMe.sendRunFunction;
 import static ltd.dreamcraft.www.EmailMain.isEmailUsed;
-import static org.bukkit.Bukkit.getConsoleSender;
 
 
 /*
@@ -41,8 +44,8 @@ import static org.bukkit.Bukkit.getConsoleSender;
 public class handleCustomPacketEvent implements Listener {
     private final AuthMeApi authMeApi = AuthMeApi.getInstance();
     private Set<String> safeUsers = new HashSet<>();
-    private String code;
-    private String emailAddress;
+    private ConcurrentHashMap<UUID, VerificationData> verificationCodes = new ConcurrentHashMap<>();//存玩家的验证数据对象 包含验证码和邮箱地址
+    private final int codeTime = DragonAuthMe.in().getConfig().getInt("Setting.CodeTime"); //验证码有效时长(单位为分钟)
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void CustomPacketEvent(CustomPacketEvent event) {
@@ -68,11 +71,12 @@ public class handleCustomPacketEvent implements Listener {
         //绑定邮箱
         if ("DragonBindEmail".equals(action)) {
             String playerCode = data.get(2);
+            String emailAddress = verificationCodes.get(player.getUniqueId()).getEmailAddress();
             if (isEmailUsed(emailAddress)) {
                 DragonData.sendMessage(player, "该邮箱已经被其他玩家绑定...");
                 return;
             }
-
+            String code = verificationCodes.get(player.getUniqueId()).getCode();
             //如果code为空，发送一条信息告诉玩家，请先获取验证码  return
             if (code == null) {
                 DragonData.sendMessage(player.getPlayer(), "请先获取验证码");
@@ -87,6 +91,8 @@ public class handleCustomPacketEvent implements Listener {
                 player.closeInventory();
                 //发送一条title告诉玩家邮箱绑定成功
                 player.sendTitle("§a恭喜你" + player.getName(), "§c邮箱绑定成功！", 10, 40, 10);
+                //绑定成功 使验证码失效
+                verificationCodes.remove(player.getUniqueId());
                 return;
             } else {
                 DragonData.sendMessage(player.getPlayer(), "验证码错误");
@@ -116,10 +122,16 @@ public class handleCustomPacketEvent implements Listener {
         }
         if ("checkEmail".equals(action)) {
             String playerEmailAddress = data.get(1);
-            getConsoleSender().sendMessage("玩家的邮箱地址" + EmailMain.getPlayerEmail(player.getName()));
             if ((EmailMain.getPlayerEmail(player.getName()).equals(playerEmailAddress))) {
-                //将生成的验证码存储在code变量中
-                code = GetVerificationCode.get(player, playerEmailAddress);
+                //将生成的验证码存储在codeTemp变量中
+                String codeTemp = GetVerificationCode.get(player, playerEmailAddress);
+                //使用构造方法生成验证码对象并且存到map集合中去
+                VerificationData verificationData = new VerificationData(codeTemp);
+                verificationCodes.put(player.getUniqueId(), verificationData);
+                Bukkit.getScheduler().runTaskLater((Plugin) DragonAuthMe.in(), () -> {
+                    verificationCodes.remove(player.getUniqueId());
+                    System.out.println("验证码失效");
+                }, codeTime * 20 * 60L);//延时一分钟执行
                 return;
             } else {
                 DragonData.sendMessage(player.getPlayer(), "绑定邮箱不正确");
@@ -133,22 +145,25 @@ public class handleCustomPacketEvent implements Listener {
         String password = data.get(1);
         if ("RecoverPsd".equals(action)) {
             String playerCode = data.get(2);
-            //如果code为空，发送一条信息告诉玩家，请先获取验证码  return
-            if (code == null) {
+            //如果code为空，发送一条信息告诉玩家，请先获取验证码
+            VerificationData verificationData = verificationCodes.get(player.getUniqueId());
+            if (verificationData == null) {
                 DragonData.sendMessage(player.getPlayer(), "请先获取验证码");
                 return;
             }
+            //如果对象存在就获取对象的验证码
+            String code = verificationData.getCode();
 
             if (code.equals(playerCode)) {
-                //绑定邮箱的方法.
-                DataManager.chat.put(player.getName(), code + "-ChangePassword-" + password);
-                //邮箱绑定之后 再执行下列方法 调用AuthMe的api注册账号
+                //验证码正确 调用AuthMe的api修改密码
                 authMeApi.changePassword(player.getName(), password);
                 player.sendMessage(Lang.success("新密码修改成功"));
                 //把倒计时变量设置为0
                 DragonData.sendCodeCountdown(player.getPlayer(), 0);
                 DragonAuthMe.in().getServer().getScheduler().runTaskLater(DragonAuthMe.in(), () -> authMeApi.forceLogin(player), 60L);
                 player.sendMessage(Lang.success("已为您自动登录"));
+                //验证成功 使验证码失效
+                verificationCodes.remove(player.getUniqueId());
             } else {
                 DragonData.sendMessage(player.getPlayer(), "验证码错误");
                 return;
@@ -198,10 +213,17 @@ public class handleCustomPacketEvent implements Listener {
         Pattern pattern = Pattern.compile(ConfigManager.getSettingRegx());
         if ("getCode".equals(action)) {
             //检查邮箱地址是否合法
-            emailAddress = data.get(2);
+            String emailAddress = data.get(2);
             if (pattern.matcher(emailAddress).matches()) {
-                //将生成的验证码存储在code变量中
-                code = GetVerificationCode.get(player, emailAddress);
+                //将生成的验证码存储在codeTemp变量中
+                String codeTemp = GetVerificationCode.get(player, emailAddress);
+                //使用构造方法生成验证码对象并且存到map集合中去
+                VerificationData verificationData = new VerificationData(codeTemp, emailAddress);
+                verificationCodes.put(player.getUniqueId(), verificationData);
+                Bukkit.getScheduler().runTaskLater((Plugin) DragonAuthMe.in(), () -> {
+                    verificationCodes.remove(player.getUniqueId());
+                    System.out.println("验证码失效");
+                }, codeTime * 20 * 60L);//延时一分钟执行
             } else {
                 DragonData.sendMessage(player.getPlayer(), "邮箱地址不合法");
             }
@@ -209,12 +231,12 @@ public class handleCustomPacketEvent implements Listener {
         }
         if ("register".equals(action)) {
             String playerCode = data.get(3);
-
+            String emailAddress = verificationCodes.get(player.getUniqueId()).getEmailAddress();
             if (isEmailUsed(emailAddress)) {
                 DragonData.sendMessage(player, "该邮箱已经被其他玩家绑定...");
                 return;
             }
-
+            String code = verificationCodes.get(player.getUniqueId()).getCode();
             //如果code为空，发送一条信息告诉玩家，请先获取验证码  return
             if (code == null) {
                 DragonData.sendMessage(player.getPlayer(), "请先获取验证码");
