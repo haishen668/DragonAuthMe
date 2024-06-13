@@ -4,7 +4,9 @@ import ltd.dreamcraft.www.DragonAuthMe;
 import ltd.dreamcraft.www.Manager.ConfigManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.nio.file.Files;
@@ -27,8 +29,8 @@ public class SendEmail {
                     //javaEmail Debug
                     properties.put("mail.debug", "false");
                     Session session = Session.getInstance(properties);
-                    Message message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress(ConfigManager.getContentEmailAddress()));
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(ConfigManager.getContentEmailAddress(), ConfigManager.getContentEmailName(), "UTF-8"));
                     message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(toAddress)});
                     message.setSubject(ConfigManager.getContentEmailTitle());
 

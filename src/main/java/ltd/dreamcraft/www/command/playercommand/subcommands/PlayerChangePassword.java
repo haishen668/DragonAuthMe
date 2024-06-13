@@ -10,6 +10,7 @@ import ltd.dreamcraft.www.tools.SendEmail;
 import org.bukkit.command.CommandSender;
 
 public class PlayerChangePassword extends SubCommand {
+    @Override
     public boolean performCommand(CommandSender sender, String[] strings) {
         if (sender.hasPermission("DragonAuthMe.Player")) {
             if (strings[0].equalsIgnoreCase("ChangePassword")) {

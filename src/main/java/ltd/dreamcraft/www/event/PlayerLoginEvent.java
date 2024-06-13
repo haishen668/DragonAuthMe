@@ -2,12 +2,14 @@ package ltd.dreamcraft.www.event;
 
 import eos.moe.dragoncore.network.PacketSender;
 import fr.xephi.authme.events.LoginEvent;
+import ltd.dreamcraft.www.DragonAuthMe;
 import ltd.dreamcraft.www.EmailMain;
 import ltd.dreamcraft.www.Manager.ConfigManager;
 import ltd.dreamcraft.www.tools.CheckPluginUpdate;
 import ltd.dreamcraft.www.tools.Lang;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerLoginEvent implements Listener {
     //监听玩家登录事件，实现强制绑定邮箱和告诉管理员是否需要更新，给予一个权限可以忽视强制绑定邮箱
@@ -27,14 +29,19 @@ public class PlayerLoginEvent implements Listener {
                 event.getPlayer().sendMessage(Lang.prefix("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
             }
         }
-        //如果邮箱功能打开且邮箱强制绑定功能也打开那么就绑定邮箱
-        if (ConfigManager.getEmailEnable() && ConfigManager.getForceBindEmail()) {
-            //如果有权限就不需要绑定邮箱，没有权限就打开龙核gui
-            if (!event.getPlayer().hasPermission("DragonAuthMe.ignore")) {
-                if (!EmailMain.isPlayerBoundToEmail(event.getPlayer().getName())) {
-                    PacketSender.sendOpenGui(event.getPlayer(), "DragonBindEmail");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                //如果邮箱功能打开且邮箱强制绑定功能也打开那么就绑定邮箱
+                if (ConfigManager.getEmailEnable() && ConfigManager.getForceBindEmail()) {
+                    //如果有权限就不需要绑定邮箱，没有权限就打开龙核gui
+                    if (!event.getPlayer().hasPermission("DragonAuthMe.ignore")) {
+                        if (!EmailMain.isPlayerBoundToEmail(event.getPlayer().getName())) {
+                            PacketSender.sendOpenGui(event.getPlayer(), "DragonBindEmail");
+                        }
+                    }
                 }
             }
-        }
+        }.runTaskLater(DragonAuthMe.in(), 20L);
     }
 }

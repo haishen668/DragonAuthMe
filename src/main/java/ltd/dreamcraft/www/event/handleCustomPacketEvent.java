@@ -130,7 +130,6 @@ public class handleCustomPacketEvent implements Listener {
                 verificationCodes.put(player.getUniqueId(), verificationData);
                 Bukkit.getScheduler().runTaskLater((Plugin) DragonAuthMe.in(), () -> {
                     verificationCodes.remove(player.getUniqueId());
-                    System.out.println("验证码失效");
                 }, codeTime * 20 * 60L);//延时一分钟执行
                 return;
             } else {
@@ -220,7 +219,7 @@ public class handleCustomPacketEvent implements Listener {
                 //使用构造方法生成验证码对象并且存到map集合中去
                 VerificationData verificationData = new VerificationData(codeTemp, emailAddress);
                 verificationCodes.put(player.getUniqueId(), verificationData);
-                Bukkit.getScheduler().runTaskLater((Plugin) DragonAuthMe.in(), () -> {
+                Bukkit.getScheduler().runTaskLater(DragonAuthMe.in(), () -> {
                     verificationCodes.remove(player.getUniqueId());
                     System.out.println("验证码失效");
                 }, codeTime * 20 * 60L);//延时一分钟执行
@@ -244,15 +243,24 @@ public class handleCustomPacketEvent implements Listener {
             }
             if (code.equals(playerCode)) {
 //                DataManager.chat.put(player.getName(), code + "-Bind-" + emailAddress);
-                //绑定邮箱的方法.
-                EmailMain.addEmail(player.getPlayer(), emailAddress);
-                //邮箱绑定之后 再执行下列方法 调用AuthMe的api注册账号
+                //验证码正确 调用AuthMe的命令注册账号
                 EmailMain.forcePlayerToRegister(player.getPlayer(), password);
 //                player.sendMessage(Lang.success("账号注册成功"));
                 //把倒计时变量设置为0
                 DragonData.sendCodeCountdown(player.getPlayer(), 0);
-                DragonAuthMe.in().getServer().getScheduler().runTaskLater(DragonAuthMe.in(), () -> authMeApi.forceLogin(player), 2L);
-                player.closeInventory();
+                //绑定邮箱的方法.
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (authMeApi.isAuthenticated(player)) {
+                            EmailMain.addEmail(player.getPlayer(), emailAddress);
+                        } else {
+                            DragonData.sendMessage(player.getPlayer(), "注册失败");
+                            return;
+                        }
+                        player.closeInventory();
+                    }
+                }.runTaskLater(DragonAuthMe.in(), 10L);
             } else {
                 DragonData.sendMessage(player.getPlayer(), "验证码错误");
             }

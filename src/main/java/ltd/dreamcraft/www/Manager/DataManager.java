@@ -50,7 +50,7 @@ public class DataManager {
             (new BukkitRunnable() {
                 public void run() {
                     Connection con = JDBCUtil.getConnection();
-                    String sql = "CREATE TABLE " + ConfigManager.getMySQLtableName() + " (ID INT PRIMARY KEY AUTO_INCREMENT, PlayerName VARCHAR(200), EmailAdress VARCHAR(200), Date VARCHAR(200))";
+                    String sql = "CREATE TABLE " + ConfigManager.getMySQLtableName() + " (ID INT PRIMARY KEY AUTO_INCREMENT, PlayerName VARCHAR(200), EmailAddress VARCHAR(200), Date VARCHAR(200))";
                     if (con != null)
                         try {
                             DatabaseMetaData meta = con.getMetaData();

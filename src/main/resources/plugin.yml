@@ -7,4 +7,4 @@ commands:
     aliases:
       - "dam"
 author: haishen668
-depend: [DragonCore,AuthMe]
+softdepend: [ DragonCore,AuthMe ]

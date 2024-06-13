@@ -6,7 +6,7 @@
 
     <groupId>ltd.dreamcraft</groupId>
     <artifactId>DragonAuthMe</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
 
     <name>DragonAuthMe</name>
@@ -39,6 +39,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <outputDirectory>C:/Users/shuyi/Desktop</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -70,15 +71,5 @@
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--            <artifactId>jackson-core</artifactId>-->
-        <!--            <version>2.15.2</version> &lt;!&ndash; 请使用与其他Jackson模块相同的版本号 &ndash;&gt;-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--            <artifactId>jackson-databind</artifactId>-->
-        <!--            <version>2.15.2</version> &lt;!&ndash; 请使用与其他Jackson模块相同的版本号 &ndash;&gt;-->
-        <!--        </dependency>-->
     </dependencies>
 </project>

@@ -7,14 +7,21 @@ import java.util.Random;
 public class CreateCode {
     public static String getCode() {
         Random rand = new Random();
-        char[] letters = {
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
-                'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-                'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                'y', 'z', 'r', '0', '1', '2', '3', '4', '5', '6',
-                '7', '8', '9' };
+        char[] letters;
+        if (ConfigManager.getSettingCodeMode() == 1) {
+            letters = new char[]{
+                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                    'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
+                    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+                    'y', 'z', 'r', '0', '1', '2', '3', '4', '5', '6',
+                    '7', '8', '9'};
+        } else {
+            letters = new char[]{
+                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        }
+
         String str = "";
         boolean[] flags = new boolean[letters.length];
         for (int i = 0; i < ConfigManager.getSettingCodeLength(); i++) {

@@ -1,4 +1,4 @@
-# DragonAuthMe插件使用帮助v1.1.5
+# DragonAuthMe插件使用帮助v1.2.1
 
 DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可以帮助你简易化玩家的注册难度。
 
@@ -28,7 +28,7 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
 ## 配置文件
 
     #插件版本
-    version: 1.1.5
+    version: 1.2.1
     #更新检查
     check-update: true
     #只支持QQ邮箱
@@ -97,8 +97,16 @@ DragonAuthMe插件是一个支持邮箱注册和修改密码的插件。它可�
 - 确保你的服务器已经安装了AuthMe和DragonCore插件。
 - 有关DragonAuthMe插件的更多信息和帮助，请前往交流群590612103。
 
+## 更新日志
+
+* Version1.2.1
+* 增加了纯数字的验证码,可自行选择
+* 修复了数据库建表的bug
+* 修复了一个配置文件的bug
+* 修复了受到ip注册最大数限制的用户可以绑定邮箱的bug
 
 ## 插件效果图
+
 <img src="https://bbs.mc9y.net/attachments/4115/" width="800px" height="560px" alt="效果图1">
 <img src="https://bbs.mc9y.net/attachments/4116/" width="800px" height="560px" alt="效果图2">
 <img src="https://bbs.mc9y.net/attachments/4117/" width="800px" height="560px" alt="效果图3">

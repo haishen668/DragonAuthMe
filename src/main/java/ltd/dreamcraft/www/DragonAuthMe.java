@@ -51,11 +51,6 @@ public class DragonAuthMe extends JavaPlugin {
             DragonAuthMeguiName = "DragonAuthMe";
             getConsoleSender().sendMessage("§b|> §e邮箱功能未启用");
         }
-        //是否启用AuthMe的注册功能 参数默认为   true = !ConfigManager.getSettingAuthMeRegister()
-//        if (!ConfigManager.getSettingAuthMeRegister()){
-//            getServer().getPluginManager().registerEvents(new PlayerRegisterEvent(), this);
-//            getConsoleSender().sendMessage("§b|> §eAuthMe注册功能已关闭");
-//        }
         Plugin authMePlugin = getServer().getPluginManager().getPlugin("AuthMe");
         Plugin dragonCorePlugin = getServer().getPluginManager().getPlugin("DragonCore");
         if (authMePlugin != null && authMePlugin.isEnabled()) {

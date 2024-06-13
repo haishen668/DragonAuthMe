@@ -2,12 +2,7 @@ package ltd.dreamcraft.www.tools;
 
 import ltd.dreamcraft.www.Manager.ConfigManager;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class JDBCUtil {
     private static Connection connection;
@@ -20,7 +15,8 @@ public class JDBCUtil {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             String[] urls = url.split(":");
-            String ip = "jdbc:mysql://" + urls[0] + ":" + urls[1] + "/" + database;
+//            String ip = "jdbc:mysql://" + urls[0] + ":" + urls[1] + "/" + database;
+            String ip = "jdbc:mysql://" + urls[0] + ":" + urls[1] + "/" + database + "?useSSL=false";
             return connection = DriverManager.getConnection(ip, username, password);
         } catch (Exception var2) {
             var2.printStackTrace();

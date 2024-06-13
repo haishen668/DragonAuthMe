@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 
 public class AdminDeleteEmail extends SubCommand {
     public boolean performCommand(CommandSender sender, String[] strings) {
-
-
         if (strings[0].equalsIgnoreCase("Delete")) {
             if (sender.hasPermission("DragonAuthMe.Delete") || sender.hasPermission("DragonAuthMe.Admin")) {
                 if (strings.length == 2) {

@@ -99,4 +99,12 @@ public class ConfigManager {
     public static String getSettingRegx() {
         return DataManager.getConfig().getString("Setting.Regx");
     }
+
+    public static int getSettingCodeMode() {
+        return DataManager.getConfig().getInt("Setting.CodeMode", 1);
+    }
+
+    public static String getContentEmailName() {
+        return DataManager.getConfig().getString("Email.Content.SenderName");
+    }
 }

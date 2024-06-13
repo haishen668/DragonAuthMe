@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.bukkit.Bukkit.getConsoleSender;
+import static org.bukkit.Bukkit.getServer;
 
 public class EmailMain {
     private String emailAddress;
@@ -220,6 +221,7 @@ public class EmailMain {
                             ps.executeUpdate();
                             ps.close();
                         }
+                        getServer().dispatchCommand(Bukkit.getConsoleSender(), "authme setemail " + playerName + " " + emailAddress);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
