@@ -68,7 +68,7 @@ public class DragonAuthMe extends JavaPlugin {
         //命令注册
         this.getCommand("DragonAuthMe").setExecutor(new PlayerCommand());
         this.getCommand("DragonAuthMeAdmin").setExecutor(new AdminCommand());
-        //Bstats插件统计
+        //BStats插件统计
         int pluginId = 18458;
         Metrics metrics = new Metrics(this, pluginId);
     }
